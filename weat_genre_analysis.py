@@ -1,12 +1,3 @@
-"""
-weat_genre_analysis.py — Compute WEAT racial bias scores
-grouped by genre and decade using HistWords SGNS embeddings.
-
-Reads: genre_lyrics.json (from fetch_genre_lyrics.py)
-       sgns/{decade}-vocab.pkl and sgns/{decade}-w.npy
-Writes: weat_genre_results.csv
-"""
-
 import pickle
 import json
 import re
@@ -14,13 +5,10 @@ import csv
 import numpy as np
 from collections import defaultdict
 
-# ── Configuration ───────────────────────────────────────────────────────────
-
 SGNS_DIR = "sgns"
 LYRICS_FILE = "genre_lyrics.json"
 OUTPUT_FILE = "weat_genre_results.csv"
 
-# Stopwords to remove from lyrics before analysis
 STOPWORDS = {
     'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
     "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself',
@@ -51,8 +39,6 @@ STOPWORDS = {
     'back', 'well', 'also', 'into', 'one', 'two',
 }
 
-# ── WEAT Word Lists (Caliskan et al., 2017) ────────────────────────────────
-
 EA_NAMES = [
     'adam', 'chip', 'harry', 'josh', 'roger',
     'alan', 'frank', 'justin', 'ryan', 'stephen',
@@ -78,10 +64,7 @@ UNPLEASANT = [
 ]
 
 
-# ── Embedding Loading ──────────────────────────────────────────────────────
-
 def load_embeddings(decade, base_path=SGNS_DIR):
-    """Load HistWords SGNS embeddings for a given decade. Uses 1990 for post-2000."""
     effective_decade = min(decade, 1990)
     vocab_path = f"{base_path}/{effective_decade}-vocab.pkl"
     vectors_path = f"{base_path}/{effective_decade}-w.npy"
@@ -91,12 +74,10 @@ def load_embeddings(decade, base_path=SGNS_DIR):
 
     vectors = np.load(vectors_path)
 
-    # Build word→index mapping
     word2idx = {word: i for i, word in enumerate(vocab)}
 
-    # Normalize vectors for cosine similarity = dot product
     norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-    norms[norms == 0] = 1  # avoid division by zero
+    norms[norms == 0] = 1 
     vectors_normed = vectors / norms
 
     return word2idx, vectors_normed
@@ -107,8 +88,6 @@ def get_vector(word, word2idx, vectors):
         return vectors[idx]
     return None
 
-
-# ── WEAT Computation ───────────────────────────────────────────────────────
 
 def cosine_sim(v1, v2):
     return float(np.dot(v1, v2))
@@ -190,9 +169,6 @@ def tokenize_lyrics(lyrics_text):
     content_words = [w for w in words if w not in STOPWORDS and len(w) > 2]
     unique_words = list(set(content_words))
     return unique_words
-
-
-# ── Main Analysis ──────────────────────────────────────────────────────────
 
 def run_analysis():
     print("Loading genre lyrics...")

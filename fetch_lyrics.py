@@ -1,22 +1,10 @@
-"""
-fetch_lyrics.py — Fetch lyrics for top 10 songs per decade (1900s–1990s)
-using the Genius API via lyricsgenius.
-
-Saves results to song_lyrics.json so you only need to run this once.
-"""
-
 import json
 import os
 import time
 import re
 import lyricsgenius
 
-# ── Genius API Token ────────────────────────────────────────────────────────
 GENIUS_TOKEN = "qekkGUMcGV3kSIY2sSmPl8R4Fi32I8JzWfDJyCGFcBzd-zXJ0NKFMQYZHurDg-6-"
-
-# ── Top 10 Songs Per Decade ─────────────────────────────────────────────────
-# Based on Billboard, music historian rankings, and historical sales data.
-# Format: (artist, song_title)
 
 TOP_SONGS = {
     1900: [
@@ -216,19 +204,11 @@ TOP_SONGS = {
 
 
 def clean_lyrics(lyrics_text):
-    """Clean raw lyrics text from Genius."""
     if not lyrics_text:
         return ""
-
-    # Remove the song title and "Lyrics" header that Genius prepends
-    # e.g., "Song Title Lyrics" at the beginning
     lines = lyrics_text.split('\n')
-
-    # Remove embed/contributor info at the end
     cleaned_lines = []
     for line in lines:
-        # Skip lines that are just section headers like [Verse 1], [Chorus], etc.
-        # but keep the actual lyric content
         if re.match(r'^\d*Embed$', line.strip()):
             continue
         if 'Contributors' in line and 'Translations' in line:
@@ -239,10 +219,8 @@ def clean_lyrics(lyrics_text):
 
     text = '\n'.join(cleaned_lines)
 
-    # Remove section markers like [Verse 1], [Chorus], [Bridge], etc.
     text = re.sub(r'\[.*?\]', '', text)
 
-    # Remove extra whitespace
     text = re.sub(r'\n{3,}', '\n\n', text)
     text = text.strip()
 
@@ -250,9 +228,7 @@ def clean_lyrics(lyrics_text):
 
 
 def fetch_all_lyrics(output_file="song_lyrics.json"):
-    """Fetch lyrics for all songs and save to JSON."""
 
-    # Check if we already have cached results
     if os.path.exists(output_file):
         with open(output_file, 'r') as f:
             existing = json.load(f)
@@ -277,8 +253,6 @@ def fetch_all_lyrics(output_file="song_lyrics.json"):
         decade_key = str(decade)
         if decade_key not in results:
             results[decade_key] = []
-
-        # Track which songs we already have for this decade
         existing_titles = {s["title"].lower() for s in results[decade_key]}
 
         print(f"\n{'='*60}")
@@ -328,16 +302,11 @@ def fetch_all_lyrics(output_file="song_lyrics.json"):
                     "genius_artist": None,
                     "error": str(e),
                 })
-
-            # Rate limiting — be polite to the API
             time.sleep(1.5)
 
-        # Save after each decade (incremental saves)
         with open(output_file, 'w') as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
         print(f"  → Saved progress to {output_file}")
-
-    # Final summary
     print(f"\n{'='*60}")
     print("  SUMMARY")
     print(f"{'='*60}")

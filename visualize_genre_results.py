@@ -16,11 +16,11 @@ plt.rcParams.update({
 INPUT_FILE = "weat_genre_results.csv"
 
 GENRE_COLORS = {
-    "Pop": "#e74c3c",       # Red
-    "Rock": "#3498db",      # Blue
-    "R&B/Soul": "#9b59b6",  # Purple
-    "Country": "#f39c12",   # Orange
-    "Hip-Hop": "#2ecc71"    # Green
+    "Pop": "#e74c3c",
+    "Rock": "#3498db",
+    "R&B/Soul": "#9b59b6", 
+    "Country": "#f39c12", 
+    "Hip-Hop": "#2ecc71" 
 }
 
 def load_data():
@@ -34,7 +34,6 @@ def load_data():
         return None
 
 def plot_genre_trends(df):
-    """Plot line chart comparing genres over time."""
     fig, ax = plt.subplots(figsize=(12, 6))
     
     decades = sorted(df['decade'].unique())
@@ -70,7 +69,6 @@ def plot_genre_trends(df):
     plt.close()
 
 def plot_genre_heatmap(df):
-    """Plot a heatmap of average scores by Genre vs Decade."""
     fig, ax = plt.subplots(figsize=(10, 6))
     
     pivot = df.pivot_table(values='racial_name_association', 
@@ -78,14 +76,12 @@ def plot_genre_heatmap(df):
                            columns='decade', 
                            aggfunc='mean')
     
-    # Sort genres nicely
     genres_sorted = ["Pop", "Rock", "Country", "R&B/Soul", "Hip-Hop"]
     genres_present = [g for g in genres_sorted if g in pivot.index]
     pivot = pivot.reindex(genres_present)
     
     pivot.columns = [f"{c}s" for c in pivot.columns]
     
-    # Custom colormap: Blue (negative/AA) to White (neutral) to Red (positive/EA)
     sns.heatmap(pivot, annot=True, fmt=".4f", cmap="coolwarm", center=0, 
                 cbar_kws={'label': 'Racial Name Association'}, ax=ax,
                 linewidths=1, linecolor='white')
@@ -100,7 +96,6 @@ def plot_genre_heatmap(df):
     plt.close()
 
 def plot_genre_distribution(df):
-    """Plot violin plots showing score distribution per genre overall."""
     fig, ax = plt.subplots(figsize=(10, 6))
     
     genres_sorted = ["Pop", "Rock", "Country", "R&B/Soul", "Hip-Hop"]
@@ -109,7 +104,6 @@ def plot_genre_distribution(df):
     sns.violinplot(data=df, x='genre', y='racial_name_association', 
                    order=genres_present, palette=GENRE_COLORS, ax=ax, inner="quartile")
     
-    # Overlay points
     sns.stripplot(data=df, x='genre', y='racial_name_association', 
                   order=genres_present, color='black', alpha=0.3, size=4, jitter=True, ax=ax)
     

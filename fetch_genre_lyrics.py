@@ -6,7 +6,6 @@ import time
 GENIUS_API_TOKEN = "qekkGUMcGV3kSIY2sSmPl8R4Fi32I8JzWfDJyCGFcBzd-zXJ0NKFMQYZHurDg-6-"
 OUTPUT_FILE = "genre_lyrics.json"
 
-# Structured as GENRE_SONGS[decade][genre] = [("Artist", "Title"), ...]
 GENRE_SONGS = {
     1950: {
         "Pop": [

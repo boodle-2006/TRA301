@@ -1,12 +1,3 @@
-"""
-weat_analysis.py — Compute WEAT (Word Embedding Association Test) racial bias
-scores for song lyrics using HistWords SGNS historical word embeddings.
-
-Reads: song_lyrics.json (from fetch_lyrics.py)
-       sgns/{decade}-vocab.pkl and sgns/{decade}-w.npy
-Writes: weat_results.csv
-"""
-
 import pickle
 import json
 import re
@@ -14,13 +5,10 @@ import csv
 import numpy as np
 from collections import defaultdict
 
-# ── Configuration ───────────────────────────────────────────────────────────
-
 SGNS_DIR = "sgns"
 LYRICS_FILE = "song_lyrics.json"
 OUTPUT_FILE = "weat_results.csv"
 
-# Stopwords to remove from lyrics before analysis
 STOPWORDS = {
     'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
     "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself',
@@ -51,7 +39,6 @@ STOPWORDS = {
     'back', 'well', 'also', 'into', 'one', 'two',
 }
 
-#(Caliskan et al., 2017)
 EA_NAMES = [
     'adam', 'chip', 'harry', 'josh', 'roger',
     'alan', 'frank', 'justin', 'ryan', 'stephen',
@@ -77,10 +64,7 @@ UNPLEASANT = [
 ]
 
 
-# ── Embedding Loading ──────────────────────────────────────────────────────
-
 def load_embeddings(decade, base_path=SGNS_DIR):
-    """Load HistWords SGNS embeddings for a given decade. Uses 1990 for post-2000."""
     effective_decade = min(decade, 1990)
     vocab_path = f"{base_path}/{effective_decade}-vocab.pkl"
     vectors_path = f"{base_path}/{effective_decade}-w.npy"
@@ -89,35 +73,27 @@ def load_embeddings(decade, base_path=SGNS_DIR):
         vocab = pickle.load(f, encoding='latin1')
 
     vectors = np.load(vectors_path)
-
-    # Build word→index mapping
     word2idx = {word: i for i, word in enumerate(vocab)}
 
-    # Normalize vectors for cosine similarity = dot product
     norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-    norms[norms == 0] = 1  # avoid division by zero
+    norms[norms == 0] = 1
     vectors_normed = vectors / norms
 
     return word2idx, vectors_normed
 
 
 def get_vector(word, word2idx, vectors):
-    """Get the normalized vector for a word, or None if not in vocab."""
     idx = word2idx.get(word)
     if idx is not None:
         return vectors[idx]
     return None
 
 
-# ── WEAT Computation ───────────────────────────────────────────────────────
-
 def cosine_sim(v1, v2):
-    """Cosine similarity between two normalized vectors (= dot product)."""
     return float(np.dot(v1, v2))
 
 
 def mean_cos_similarity(word_vec, target_words, word2idx, vectors):
-    """Mean cosine similarity between a word vector and a set of target words."""
     sims = []
     for tw in target_words:
         tv = get_vector(tw, word2idx, vectors)
@@ -129,11 +105,7 @@ def mean_cos_similarity(word_vec, target_words, word2idx, vectors):
 
 
 def weat_single_word_association(word_vec, attr_A, attr_B, word2idx, vectors):
-    """
-    s(w, A, B) = mean_a cos(w, a) - mean_b cos(w, b)
 
-    Measures how much more associated a word is with attribute set A than B.
-    """
     mean_a = mean_cos_similarity(word_vec, attr_A, word2idx, vectors)
     mean_b = mean_cos_similarity(word_vec, attr_B, word2idx, vectors)
 
@@ -144,18 +116,6 @@ def weat_single_word_association(word_vec, attr_A, attr_B, word2idx, vectors):
 
 
 def weat_effect_size(target_X, target_Y, attr_A, attr_B, word2idx, vectors):
-    """
-    Compute the WEAT effect size (Cohen's d):
-
-    d = [mean_x s(x,A,B) - mean_y s(y,A,B)] / std_dev(s(w,A,B) for w in X∪Y)
-
-    Where:
-    - X = European American names
-    - Y = African American names
-    - A = Pleasant attributes
-    - B = Unpleasant attributes
-    """
-    # Compute associations for target set X (EA names)
     s_X = []
     for word in target_X:
         wv = get_vector(word, word2idx, vectors)
@@ -164,7 +124,6 @@ def weat_effect_size(target_X, target_Y, attr_A, attr_B, word2idx, vectors):
             if assoc is not None:
                 s_X.append(assoc)
 
-    # Compute associations for target set Y (AA names)
     s_Y = []
     for word in target_Y:
         wv = get_vector(word, word2idx, vectors)
@@ -179,7 +138,6 @@ def weat_effect_size(target_X, target_Y, attr_A, attr_B, word2idx, vectors):
     mean_X = np.mean(s_X)
     mean_Y = np.mean(s_Y)
 
-    # Standard deviation over all associations
     all_s = s_X + s_Y
     std_all = np.std(all_s, ddof=0)
 
@@ -192,16 +150,6 @@ def weat_effect_size(target_X, target_Y, attr_A, attr_B, word2idx, vectors):
 
 
 def compute_lyric_racial_association(lyric_words, word2idx, vectors):
-    """
-    Compute how song lyric words associate with EA vs AA names.
-
-    For each lyric word w:
-        assoc(w) = mean cos(w, EA_names) - mean cos(w, AA_names)
-
-    Returns the mean association across all lyric words.
-    Positive = lyrics more associated with EA names.
-    Negative = lyrics more associated with AA names.
-    """
     associations = []
     words_used = []
 
@@ -224,20 +172,6 @@ def compute_lyric_racial_association(lyric_words, word2idx, vectors):
 
 
 def compute_lyric_weat(lyric_words, word2idx, vectors):
-    """
-    Standard WEAT using lyric words as attributes instead of pleasant/unpleasant.
-    
-    Measures whether song lyrics create differential associations between
-    EA names and AA names.
-    
-    Target X = EA names, Target Y = AA names
-    Attributes A = Pleasant words, Attributes B = Unpleasant words
-    
-    But we ALSO compute a modified version where the song lyrics serve as 
-    a "context" — measuring the racial association of the lyric vocabulary.
-    """
-    # Standard WEAT (EA/AA names × pleasant/unpleasant)
-    # using only attribute words that appear in the lyrics OR in the vocab
     effect_size, mean_ea_assoc, mean_aa_assoc = weat_effect_size(
         EA_NAMES, AA_NAMES, PLEASANT, UNPLEASANT, word2idx, vectors
     )
@@ -245,34 +179,20 @@ def compute_lyric_weat(lyric_words, word2idx, vectors):
     return effect_size, mean_ea_assoc, mean_aa_assoc
 
 
-# ── Lyrics Processing ──────────────────────────────────────────────────────
-
 def tokenize_lyrics(lyrics_text):
-    """Extract content words from lyrics text."""
     if not lyrics_text:
         return []
 
-    # Lowercase
     text = lyrics_text.lower()
 
-    # Remove punctuation, keep only alphabetic words
     words = re.findall(r'[a-z]+', text)
-
-    # Remove stopwords and very short words
     content_words = [w for w in words if w not in STOPWORDS and len(w) > 2]
-
-    # Get unique words (we care about vocabulary, not frequency)
     unique_words = list(set(content_words))
 
     return unique_words
 
-
-# ── Main Analysis ──────────────────────────────────────────────────────────
-
 def run_analysis():
-    """Run the full WEAT analysis on all songs."""
 
-    # Load lyrics
     print("Loading lyrics...")
     with open(LYRICS_FILE, 'r') as f:
         all_lyrics = json.load(f)
@@ -289,12 +209,9 @@ def run_analysis():
         print(f"  Loading SGNS embeddings for {decade}...")
         print(f"{'='*60}")
 
-        # Load embeddings for this decade
         word2idx, vectors = load_embeddings(decade)
         vocab_size = len(word2idx)
         print(f"  Vocabulary size: {vocab_size:,}")
-
-        # Also compute the baseline WEAT for this decade (no song context)
         baseline_effect, baseline_ea, baseline_aa = weat_effect_size(
             EA_NAMES, AA_NAMES, PLEASANT, UNPLEASANT, word2idx, vectors
         )
@@ -325,15 +242,11 @@ def run_analysis():
                 })
                 continue
 
-            # Tokenize lyrics
             content_words = tokenize_lyrics(lyrics)
 
-            # Compute racial name association of lyric words
             racial_assoc, words_used, n_words = compute_lyric_racial_association(
                 content_words, word2idx, vectors
             )
-
-            # Compute standard WEAT for this decade's embeddings
             effect_size, ea_assoc, aa_assoc = compute_lyric_weat(
                 content_words, word2idx, vectors
             )
@@ -351,7 +264,7 @@ def run_analysis():
                 "weat_effect_size": effect_size,
                 "ea_pleasant_assoc": ea_assoc,
                 "aa_pleasant_assoc": aa_assoc,
-                "words_analyzed": "; ".join(words_used[:30]),  # first 30 for readability
+                "words_analyzed": "; ".join(words_used[:30]),
                 "status": status,
             })
 
@@ -364,7 +277,6 @@ def run_analysis():
             else:
                 print(f"  ✗ {title} — no words found in embedding vocab")
 
-        # Decade summary
         if decade_scores:
             mean_score = np.mean(decade_scores)
             decade_summaries[decade] = mean_score
@@ -374,7 +286,6 @@ def run_analysis():
             decade_summaries[decade] = None
             print(f"\n  Decade average: N/A (no lyrics matched)")
 
-    # Save results to CSV
     print(f"\n{'='*60}")
     print(f"  Saving results to {OUTPUT_FILE}")
     print(f"{'='*60}")
@@ -394,7 +305,6 @@ def run_analysis():
 
     print(f"  Wrote {len(results)} rows to {OUTPUT_FILE}")
 
-    # Print final summary
     print(f"\n{'='*60}")
     print("  DECADE SUMMARY — Racial Name Association")
     print(f"  (positive = lyrics closer to EA names)")

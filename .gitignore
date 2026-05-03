@@ -1,0 +1,9 @@
+# Ignore HistWords embeddings (too large for GitHub)
+sgns/
+
+# Ignore Python caches
+__pycache__/
+*.pyc
+
+# Ignore OS files
+.DS_Store

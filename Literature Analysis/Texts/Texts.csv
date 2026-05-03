@@ -1,0 +1,41 @@
+Title,filename,Source,Author,Gender,Genre,Year
+Pride and Prejudice,prideandprejudice.txt,https://www.gutenberg.org/cache/epub/1342/pg1342.txt,Jane Austen,F,"Regency, Romance, Satire",1813
+Jane Eyre,janeeyre.txt,https://www.gutenberg.org/cache/epub/1260/pg1260.txt,Charlotte Brontë,F,"Gothic, Bildungsroman, Romance",1847
+The Picture of Dorian Gray,thepictureofdoriangray.txt,https://www.gutenberg.org/cache/epub/174/pg174.txt,Oscar Wilde,M,"Philosophical, Gothic, Decadent",1890
+Wuthering Heights,wutheringheights.txt,https://www.gutenberg.org/cache/epub/768/pg768.txt,Emily Brontë,F,"Tragedy, Gothic",1847
+Crime and Punishment,crimeandpunishment.txt,https://www.gutenberg.org/cache/epub/2554/pg2554.txt,Fyodor Dostoevsky,M,Philosophical,1866
+Frankenstein,frankenstein.txt,https://www.gutenberg.org/cache/epub/84/pg84.txt,Mary Shelley,F,"Gothic, Science Fiction",1818
+The Count of Monte Cristo,thecountofmontecristo.txt,https://www.gutenberg.org/cache/epub/1184/pg1184.txt,Alexandre Dumas,M,"Historical, Adventure",1846
+Alice's Adventures in Wonderland,alicesadventuresinwonderland.txt,https://www.gutenberg.org/cache/epub/11/pg11.txt,Lewis Carroll,M,"Children's, Fantasy",1865
+Dracula,dracula.txt,https://www.gutenberg.org/cache/epub/345/pg345.txt,Bram Stoker,M,"Gothic, Horror",1897
+Little Women,littlewomen.txt,https://www.gutenberg.org/cache/epub/37106/pg37106.txt,Louisa May Alcott,F,"Bildungsroman, Historical, Romance, Children's",1868
+Emma,emma.txt,https://www.gutenberg.org/cache/epub/158/pg158.txt,Jane Austen,F,"Satire, Romance, Realism",1816
+Les Misérables,lesmiserables.txt,https://www.gutenberg.org/cache/epub/135/pg135.txt,Victor Hugo,M,"Epic, Historical",1862
+Persuasion,persuasion.txt,https://www.gutenberg.org/cache/epub/105/pg105.txt,Jane Austen,F,"Romance, Realism",1818
+Anna Karenina,annakarenina.txt,https://www.gutenberg.org/cache/epub/1399/pg1399.txt,Leo Tolstoy,M,"Realism, Tragedy",1878
+The Adventures of Huckleberry Finn,huckleberryfinn.txt,https://www.gutenberg.org/cache/epub/76/pg76.txt,Mark Twain,M,"Satire, Children's, Bildungsroman",1885
+Sense and Sensibility,senseandsensibility.txt,https://www.gutenberg.org/cache/epub/161/pg161.txt,Jane Austen,F,Romance,1811
+A Tale of Two Cities,ataleoftwocities.txt,https://www.gutenberg.org/cache/epub/98/pg98.txt,Charles Dickens,M,Historical,1859
+Great Expectations,greatexpectations.txt,https://www.gutenberg.org/cache/epub/1400/pg1400.txt,Charles Dickens,M,"Bildungsroman, Humor, Gothic, Historical",1861
+A Christmas Carol,achristmascarol.txt,http://gutenberg.org/cache/epub/46/pg46.txt,Charles Dickens,M,Fantasy,1843
+The Brothers Karamazov,thebrotherskaramazov.txt,https://www.gutenberg.org/cache/epub/28054/pg28054.txt,Fyodor Dostoevsky,M,"Philosophical, Theological",1880
+War and Peace,warandpeace.txt,http://gutenberg.org/cache/epub/2600/pg2600.txt,Leo Tolstoy,M,"Historical, Epic",1869
+The Adventures of Sherlock Holmes,sherlockholmes.txt,https://www.gutenberg.org/cache/epub/1661/pg1661.txt,Arthur Conan Doyle,M,Detective,1892
+The Importance of Being Earnest,theimportanceofbeingearnest.txt,https://www.gutenberg.org/cache/epub/844/pg844.txt,Oscar Wilde ,M,Comedy,1895
+Moby Dick,mobydick.txt,https://www.gutenberg.org/cache/epub/2701/pg2701.txt,Herman Melville,M,"Adventure, Epic",1851
+The Adventures of Tom Sawyer,tomsawyer.txt,https://www.gutenberg.org/cache/epub/74/pg74.txt,Mark Twain,M,"Bildungsroman, Satire, Folk, Children's",1876
+Madame Bovary,madamebovary.txt,https://www.gutenberg.org/cache/epub/2413/pg2413.txt,Gustave Flaubert,M,Realism,1857
+Treasure Island,treasureisland.txt,https://www.gutenberg.org/cache/epub/120/pg120.txt,Robert Louis Stevenson,M,"Adventure, Bildungsroman, Historical",1883
+Tess of the D'Urbervilles,tessofthedurbervilles.txt,https://www.gutenberg.org/cache/epub/110/pg110.txt,Thomas Hardy,M,"Social, Tragedy",1891
+The Scarlet Letter,thescarletletter.txt,https://www.gutenberg.org/cache/epub/25344/pg25344.txt,Nathaniel Hawthorne,M,"Romantic, Historical",1850
+The Three Musketeers,thethreemusketeers.txt,https://www.gutenberg.org/cache/epub/1257/pg1257.txt,Alexandre Dumas,M,"Historical, Adventure",1894
+North and South,northandsouth.txt,https://www.gutenberg.org/cache/epub/4276/pg4276.txt,Elizabeth Gaskell,F,Social,1854
+Northanger Abbey,northangerabbey.txt,https://www.gutenberg.org/cache/epub/121/pg121.txt,Jane Austen,F,"Gothic, Satire, Bildungsroman",1818
+David Copperfield,davidcopperfield.txt,https://www.gutenberg.org/cache/epub/766/pg766.txt,Charles Dickens,M,Bildungsroman,1849
+Mansfield Park,mansfieldpark.txt,https://www.gutenberg.org/cache/epub/141/pg141.txt,Jane Austen,F,"Romance, Bildungsroman",1814
+Oliver Twist,olivertwist.txt,https://www.gutenberg.org/cache/epub/730/pg730.txt,Charles Dickens,M,"Social, Bildungsroman, Satire",1838
+The Strange Case of Dr. Jekyll and Mr. Hyde,jekyllandhyde.txt,https://www.gutenberg.org/cache/epub/43/pg43.txt,Robert Louis Stevenson,M,"Gothic, Horror, Detective",1866
+The Time Machine,thetimemachine.txt,https://www.gutenberg.org/cache/epub/35/pg35.txt,H. G. Wells,M,Science Fiction,1895
+A Study in Scarlet,astudyinscarlet.txt,https://www.gutenberg.org/cache/epub/244/pg244.txt,Arthur Conan Doyle,M,Detective,1887
+Middlemarch,middlemarch.txt,https://www.gutenberg.org/cache/epub/145/pg145.txt,George Eliot,M,"Realism, Historical",1871
+Grimm's Fairy Tales,grimmsfairytales.txt,https://www.gutenberg.org/cache/epub/2591/pg2591.txt,Jacob Grimm,M,"Fairy Tale, Folklore",1812
